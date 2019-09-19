@@ -1,0 +1,6 @@
+{
+  "secure": true,
+  "privkey": "/etc/letsencrypt/live/<domain>/privkey.pem",
+  "fullchain": "/etc/letsencrypt/live/<domain>/fullchain.pem",
+  "port": 8004
+}

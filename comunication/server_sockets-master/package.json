@@ -1,0 +1,27 @@
+{
+  "name": "pachucho_sockets",
+  "version": "1.0.0",
+  "description": "Pachucho Server implementation",
+  "main": "app.js",
+  "scripts": {
+    "default": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "websocket",
+    "node",
+    "server",
+    "pachucho"
+  ],
+  "author": "Carles Gutierrez",
+  "contributtors": [
+    {
+      "name": "Diego Andrés Ramírez Aragón",
+      "email": "dramirezaragon@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "socket.io": "^2.2.0"
+  }
+}

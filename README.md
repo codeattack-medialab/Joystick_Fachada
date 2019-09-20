@@ -1,2 +1,3 @@
 # Joystick_Fachada
-Joystick NodeMCU enviando mensajes UDP a Godot
+Joystick websockets->Upd commands from NodeMCU to Godot.
+Designed for MadPong Game at Medialab-Prado digital facade. 

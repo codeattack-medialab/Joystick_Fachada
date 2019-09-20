@@ -1,20 +1,27 @@
-# Pachucho Protocol
+# Joystick Protocol
 
-## addPachucho
+## addJoystick
 
 ```
-addPachucho ROOM
+addJoystick ROOM
 ```
 
-`addPachucho` message is sent by the client when it connects to the server. It pass as paramenter 'ROOM' that is the unique identifier of the room create for a pachucho and its pair.
+`addJoystick` message is sent by the client when it connects to the server. It pass as paramenter 'ROOM' that is the unique identifier of the room create for a pachucho and its pair.
 `ROOM` is calculated in the client as follow:
 
-> ROOM = Pachucho_1_ID + Pachucho_2_ID
-
-## HUUUUUUUUUUUG
+> ROOM = "8"
 
 ```
-HUUUUUUUUUUUG number <number>
+Left-1.0 number <number>
 ```
+```
+Right-1.0 number <number>
+Right-0.0 number <number>
+```
+```
+Click-1.0 number <number> 
+Click-0.0 number <number>
+```
+Number is the idJoystick, and 1.0 is Pressed, and 0.0 represents Released
 
-`HUUUUUUUUUUUG` message is sent when an event is generated in a client. This message is broadcasted in the room create for a couple of paired pachuchos. The number is a consecutive indicating the hug number; it is not used at the moment.
+If this server receive this message then it will be send again by UDP sockets using PORT 33333 to GODOT. ( or another UDP server listener app )

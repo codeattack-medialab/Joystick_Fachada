@@ -1,4 +1,4 @@
-# Pachucho Sockets Server
+# Joystick Sockets Server
 
 ## Requirements
 ##Using UPD sockets

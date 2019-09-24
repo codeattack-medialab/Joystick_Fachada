@@ -65,19 +65,19 @@ io.sockets.on("connection", function(socket) {
     console.log('data[1]: '+data_parsed_vector[1]);
 
     if(data_parsed_vector[0] == 'Left'){
-      client.send(data.message, 0, data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
+      client.send(data.sender+"-"+data.message, 0, 1+data.sender.length+data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
       if (err) throw err;
       console.log('UDP message sent to ' + HOSTUDP +':'+ PORTUDP);
       });
     }
     else if(data_parsed_vector[0] == 'Right'){
-      client.send(data.message, 0, data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
+      client.send(data.sender+"-"+data.message, 0, 1+data.sender.length+data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
       if (err) throw err;
       console.log('UDP message sent to ' + HOSTUDP +':'+ PORTUDP);
       });
     }
     else if(data_parsed_vector[0] == 'Click'){
-      client.send(messageClickPressed, 0, messageClickPressed.length, PORTUDP, HOSTUDP, function(err, bytes) {
+      client.send(data.sender+"-"+messageClickPressed, 0, 1+data.sender.length+messageClickPressed.length, PORTUDP, HOSTUDP, function(err, bytes) {
       if (err) throw err;
       console.log('UDP message sent to ' + HOSTUDP +':'+ PORTUDP);
       });

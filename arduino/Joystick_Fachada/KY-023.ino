@@ -1,5 +1,9 @@
+// https://arduinomodules.info/ky-023-joystick-dual-axis-module/
+// mapping Pin for KY-023 with ESP8266
+// VRx -> None , VRy -> A0, SW -> D1 , GND -> GND, 5V -> 3.3V
+
 const int analogInPin = A0;  // ESP8266 Analog Pin ADC0 = A0
-const int digitalInPin = D1;
+const int digitalInPin = D1; //SW pin
 bool bLeftActive = false;
 bool bRightActive = false;
 int defaultJoystickValueX = 544;

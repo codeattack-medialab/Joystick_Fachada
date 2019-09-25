@@ -9,6 +9,7 @@
 
 bool doConectRoom = true;
 bool bDebugSockets = true;
+bool bConnected = false;
 
 #define USE_SERIAL Serial
 //#define HAS_SSL true
@@ -20,6 +21,7 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
       break;
     case sIOtype_CONNECT:
       USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
+      bConnected = true;
       break;
     case sIOtype_EVENT:
       USE_SERIAL.printf("[IOc] get event: %s\n", payload);
@@ -176,36 +178,57 @@ void loop_webSockets() {
   //USE_SERIAL.print("ellapsedTime = ");
   //USE_SERIAL.println(ellapsedTime);
 
+  if (bConnected) {
 
-  if (ellapsedTime > 1000 && doConectRoom == true) {
-    USE_SERIAL.println("Enter enter to this Room!");
-    sendMessageRoom("addJoystick", "/8");//4:4
-    doConectRoom = false;
-  }
-  else if (/*ellapsedTime > 1000 &&*/ sendUDPOnce == true) {
-    //sendMessageRoom("addJoystick", "/8");//Entering in Room #8
-    if (sendUDPOnce) {
-      if (bSendLeftMessage) {
-        sendMessage("toServer", "Left-"+String(mapAnalogX_ky023_left), String(idJoystick)); //String(mapAnalogX_ky023_left)
-        USE_SERIAL.println("bSendLeftMessage!");
-        bSendLeftMessage = false;
-      }
-      if (bSendRightMessage) {
-        sendMessage("toServer", "Right-"+String(mapAnalogX_ky023_right), String(idJoystick)); // String(mapAnalogX_ky023_right)
-        USE_SERIAL.println("bSendRightMessage!");
-        bSendRightMessage = false;
-      }
-      if (bSendClickMessage) {
-        sendMessage("toServer", "Click-1", String(idJoystick)); // "Click is just one Click"
-        bSendClickMessage = false;
-        USE_SERIAL.println("bSendClickMessage!");
-      }
+    if (ellapsedTime > 1000 && doConectRoom == true) {
+      USE_SERIAL.println("Enter enter to this Room!");
+      sendMessageRoom("addJoystick", "/8");//4:4
+      doConectRoom = false;
     }
-    sendUDPOnce = false;
+    else if (/*ellapsedTime > 1000 &&*/ sendUDPOnce == true) {
+      //sendMessageRoom("addJoystick", "/8");//Entering in Room #8
+      if (sendUDPOnce) {
+        if (bSendNoLeftNoRightMessage) {
+          sendMessage("toServer", "X/" + String(0.0), String(idJoystick)); // String(mapAnalogX_ky023_right)
+          USE_SERIAL.println("bSendRightMessage!");
+          bSendNoLeftNoRightMessage = false;
+        }
+        else {
+          if (bSendLeftMessage) {
+            sendMessage("toServer", "X/" + String(mapAnalogX_ky023_left), String(idJoystick)); //String(mapAnalogX_ky023_left)
+            USE_SERIAL.println("bSendLeftMessage!");
+            bSendLeftMessage = false;
+          }
+          if (bSendRightMessage) {
+            sendMessage("toServer", "X/" + String(mapAnalogX_ky023_right), String(idJoystick)); // String(mapAnalogX_ky023_right)
+            USE_SERIAL.println("bSendRightMessage!");
+            bSendRightMessage = false;
+          }
+        }
+
+        if (bSendClickMessage) {
+          
+          //TODO if pressed
+          sendMessage("toServer", "Click/" + String(1.0), String(idJoystick)); // "Click is just one Click"
+          bSendClickMessage = false;
+          USE_SERIAL.println("bSendClickMessage!");
+          
+          //TODO if released
+        }
+      }
+      sendUDPOnce = false;
+    }
   }
 
 
 }
+
+//-----------------------------------------------
+void sendNoLeftNoRightWebSockets() {
+  bSendNoLeftNoRightMessage = true;
+  sendUDPOnce = true;
+}
+
 //-----------------------------------------------
 void sendRightWebSockets() {
   bSendRightMessage = true;

@@ -32,7 +32,7 @@ void loop_ky023() {
     if (bDebugButtons)Serial.print("X:");
     if (bDebugButtons)Serial.print(valueAnalogX_ky023, DEC);
 
-    mapAnalogX_ky023_left = mapfloat(valueAnalogX_ky023, defaultJoystickValueX, 1024, 0.0f, 1.0f);
+    mapAnalogX_ky023_left = mapfloat(valueAnalogX_ky023, defaultJoystickValueX, 1024, 0.0f, -1.0f);
 
     if (bDebugButtons)Serial.print("Map Left X:");
     if (bDebugButtons)Serial.println(mapAnalogX_ky023_left, 2);
@@ -42,7 +42,8 @@ void loop_ky023() {
   else if (valueAnalogX_ky023 < defaultJoystickValueX - 10) {
     if (bDebugButtons)Serial.print("X:");
     if (bDebugButtons)Serial.print(valueAnalogX_ky023, DEC);
-    mapAnalogX_ky023_right = mapfloat(valueAnalogX_ky023, defaultJoystickValueX, 0, 0.0f, 1.0f);
+    mapAnalogX_ky023_right = mapfloat(valueAnalogX_ky023, defaultJoystickValueX, 9, 0.0f, 1.0f); // 9 better than 0... KY023 is not perfect arround 0
+    if(mapAnalogX_ky023_right>1.0)mapAnalogX_ky023_right = 1.0;//parche
 
     if (bDebugButtons)Serial.print("Map Right or Center X:");
     if (bDebugButtons)Serial.println(mapAnalogX_ky023_right, 2);
@@ -68,23 +69,25 @@ void loop_ky023() {
 
 //----------------------------------------------------
 void loop_evaluate_send_LeftRight_ky023() {
-  //if (valueAnalogX_ky023 != last_valueAnalogX_ky023) {
+  if (valueAnalogX_ky023 != last_valueAnalogX_ky023) {
 
-  if (bLeftActive) {
-    sendLeftWebSockets();
-    bLeftActive = false;
-    bRightActive = false;
-    Serial.println("send left!" + String(mapAnalogX_ky023_left, 2));
-  }
-  else if (bRightActive) {
-    //then is Right or 0
-    sendRightWebSockets();
-    bRightActive = false;
-    bLeftActive = false;
-    Serial.println("send Right!" + String(mapAnalogX_ky023_right, 2));
-  }
-  else {
-    //Serial.println("Nothing to Send!"+String(mapAnalogX_ky023_right));
+    if (bLeftActive) {
+      sendLeftWebSockets();
+      bLeftActive = false;
+      bRightActive = false;
+      Serial.println("send left!" + String(mapAnalogX_ky023_left, 2));
+    }
+    else if (bRightActive) {
+      //then is Right or 0
+      sendRightWebSockets();
+      bRightActive = false;
+      bLeftActive = false;
+      Serial.println("send Right!" + String(mapAnalogX_ky023_right, 2));
+    }
+    else {
+      Serial.println("send NoLeftNoRight -> !" + String(mapAnalogX_ky023_right, 2));
+      sendNoLeftNoRightWebSockets();//TODO Avoid to send everytime
+    }
   }
 
   // }

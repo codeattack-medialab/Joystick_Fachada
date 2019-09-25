@@ -12,6 +12,7 @@ ESP8266WiFiMulti WiFiMulti;
 SocketIOclient socketIO;
 
 //Control Vars
+bool bSendNoLeftNoRightMessage = false;
 bool bSendRightMessage = false;
 bool bSendLeftMessage = false;
 bool bSendClickMessage = false;
@@ -133,10 +134,10 @@ void loopStatus() {
     if (bRefreshScreen) {
       Serial.println("Display Waiting");
       //Waiting. Refresh Quick bitmap image
+      display.setRotation(0);
       display.fillScreen(GxEPD_WHITE);
-      display.drawExampleBitmap(BitmapExample1, 0, 0, GxEPD_WIDTH, GxEPD_HEIGHT, GxEPD_BLACK);
+      display.drawExampleBitmap(gImage_IMG_0001, x, y, 64, 180, GxEPD_BLACK);
       display.update();
-      delay(2000);
     }
 
     //do not refresh until changes. Time for full refresh is 2s

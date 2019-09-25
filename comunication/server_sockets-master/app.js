@@ -59,25 +59,19 @@ io.sockets.on("connection", function(socket) {
     //socket.broadcast.to(socket.channel).emit("fromServer", data);
 
     var PORTUDP = 33333;
-    var HOSTUDP = '127.0.0.1';//'192.168.43.14';//
+    var HOSTUDP = '192.168.43.244';//127.0.0.1//'192.168.43.14';//
     var data_parsed_vector = data.message.split("-");
     console.log('data[0]: '+data_parsed_vector[0]);
     console.log('data[1]: '+data_parsed_vector[1]);
 
-    if(data_parsed_vector[0] == 'Left'){
-      client.send(data.sender+"-"+data.message, 0, 1+data.sender.length+data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
-      if (err) throw err;
-      console.log('UDP message sent to ' + HOSTUDP +':'+ PORTUDP);
-      });
-    }
-    else if(data_parsed_vector[0] == 'Right'){
-      client.send(data.sender+"-"+data.message, 0, 1+data.sender.length+data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
+    if(data_parsed_vector[0] == 'X'){
+      client.send(data.sender+"/"+data.message, 0, 1+data.sender.length+data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
       if (err) throw err;
       console.log('UDP message sent to ' + HOSTUDP +':'+ PORTUDP);
       });
     }
     else if(data_parsed_vector[0] == 'Click'){
-      client.send(data.sender+"-"+messageClickPressed, 0, 1+data.sender.length+messageClickPressed.length, PORTUDP, HOSTUDP, function(err, bytes) {
+      client.send(data.sender+"/"+messageClickPressed, 0, 1+data.sender.length+messageClickPressed.length, PORTUDP, HOSTUDP, function(err, bytes) {
       if (err) throw err;
       console.log('UDP message sent to ' + HOSTUDP +':'+ PORTUDP);
       });

@@ -69,7 +69,7 @@ void loop_ky023() {
 
 //----------------------------------------------------
 void loop_evaluate_send_LeftRight_ky023() {
-  if (valueAnalogX_ky023 != last_valueAnalogX_ky023) {
+  //if (valueAnalogX_ky023 != last_valueAnalogX_ky023) {
 
     if (bLeftActive) {
       sendLeftWebSockets();
@@ -88,7 +88,7 @@ void loop_evaluate_send_LeftRight_ky023() {
       Serial.println("send NoLeftNoRight -> !" + String(mapAnalogX_ky023_right, 2));
       sendNoLeftNoRightWebSockets();//TODO Avoid to send everytime
     }
-  }
+ // }
 
   // }
 

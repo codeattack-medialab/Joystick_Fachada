@@ -3,8 +3,8 @@
 var dgram = require('dgram');
 var messageLeft = new Buffer('Left-1.0');
 var messageRight = new Buffer('Right-1.0');
-var messageClickPressed = new Buffer('Click-1');
-var messageClickReleased = new Buffer('Click-0');
+var messageClickPressed = new Buffer('Click/1');
+var messageClickReleased = new Buffer('Click/0');
 
 var client = dgram.createSocket('udp4');
 
@@ -59,8 +59,8 @@ io.sockets.on("connection", function(socket) {
     //socket.broadcast.to(socket.channel).emit("fromServer", data);
 
     var PORTUDP = 33333;
-    var HOSTUDP = '192.168.43.244';//127.0.0.1//'192.168.43.14';//
-    var data_parsed_vector = data.message.split("-");
+    var HOSTUDP = '127.0.0.1';//192.168.43.244//'192.168.43.14';//
+    var data_parsed_vector = data.message.split("/");
     console.log('data[0]: '+data_parsed_vector[0]);
     console.log('data[1]: '+data_parsed_vector[1]);
 

@@ -1,8 +1,7 @@
 ////////////////////////////////////////////////
 
 var dgram = require('dgram');
-var messageLeft = new Buffer('Left-1.0');
-var messageRight = new Buffer('Right-1.0');
+
 var messageClickPressed = new Buffer('Click/1');
 var messageClickReleased = new Buffer('Click/0');
 
@@ -71,7 +70,7 @@ io.sockets.on("connection", function(socket) {
       });
     }
     else if(data_parsed_vector[0] == 'Click'){
-      client.send(data.sender+"/"+messageClickPressed, 0, 1+data.sender.length+messageClickPressed.length, PORTUDP, HOSTUDP, function(err, bytes) {
+      client.send(data.sender+"/"+data.message, 0, 1+data.sender.length+data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
       if (err) throw err;
       console.log('UDP message sent to ' + HOSTUDP +':'+ PORTUDP);
       });

@@ -1,14 +1,23 @@
-//ID Joystick
-int idJoystick = 1;
+
 //////////////////////////////////////////////
 //WIFI and Websockets
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
 #include <ArduinoJson.h>
 #include <WebSocketsClient.h>
 #include <SocketIOclient.h>
 #include <Hash.h>
-ESP8266WiFiMulti WiFiMulti;
+//////////////////////////////////////////////
+//ID Joystick
+int idJoystick = 1;
+//Enter the SSID and Password of the Access Point or Hotspot.
+const char* ssid = "MPF";//"Medialab-Prado";//"Orange-BC0A";
+const char* password = "Fachad4MP";//"visualizar";//"NmyRdSqc";
+//Enter the static ip that you want to set
+IPAddress ip(192, 168, 1, 111);
+IPAddress gateway(192, 168, 0, 1);
+IPAddress subnet(255, 255, 255, 0);
+
+/////////////////////////////////////////////
 SocketIOclient socketIO;
 
 //Control Vars
@@ -135,10 +144,10 @@ void loopStatus() {
     if (bRefreshScreen) {
       Serial.println("Display Waiting");
       //Waiting. Refresh Quick bitmap image
-      display.setRotation(1);
-      display.fillScreen(GxEPD_WHITE);
-      display.drawExampleBitmap(myBitmap_madpong, x, y, 296, 128, GxEPD_BLACK, reverse);
-      display.update();
+//      display.setRotation(1);
+//      display.fillScreen(GxEPD_WHITE);
+//      display.drawExampleBitmap(myBitmap_madpong, x, y, 296, 128, GxEPD_BLACK, reverse);
+//      display.update();
     }
 
     //do not refresh until changes. Time for full refresh is 2s

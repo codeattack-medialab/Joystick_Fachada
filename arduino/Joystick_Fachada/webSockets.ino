@@ -48,9 +48,39 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
   }
 }
 
+//----------------------------------------------
+void wifiSetup() {
+  // Connection to wireless network
+  USE_SERIAL.println();
+  USE_SERIAL.println();
+  USE_SERIAL.print("Connecting to ");
+  USE_SERIAL.println(ssid);
+
+  //Configuring the WI-FI with the specified static IP.
+  WiFi.config(ip, gateway, subnet);
+
+  //Start the WI-FI connection with specified ACCESS-POINT
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+
+  // Print the IP address in the serial monitor.
+  Serial.print("Type this address in URL to connect: ");
+  Serial.print("http://");
+  Serial.println(ip);
+  Serial.println("/");
+
+  Serial.print("Local IP = ");
+  Serial.println(WiFi.localIP());
+}
+
 void setup_webSockets() {
-  // USE_SERIAL.begin(921600);
-  USE_SERIAL.begin(115200);
 
   USE_SERIAL.println("Hello WbsocketsIO");
 
@@ -67,23 +97,12 @@ void setup_webSockets() {
     delay(1000);
   }
 
-  // disable AP
-  if (WiFi.getMode() & WIFI_AP) {
-    WiFi.softAPdisconnect(true);
-  }
+  ////////////////////
+  wifiSetup();
 
-  WiFiMulti.addAP("Medialab-Prado", "visualizar");//"waifay", "internes"
-
-  //WiFi.disconnect();
-  while (WiFiMulti.run() != WL_CONNECTED) {
-    delay(100);
-  }
-
-  String ip = WiFi.localIP().toString();
-  USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
 
   // server address, port and URL
-  socketIO.begin("192.168.1.18", 8004);//TODO 127.0.0.1? or URL //192.168.43.244
+  socketIO.begin("192.168.1.171", 8004);//TODO 127.0.0.1? or URL //192.168.43.244
 
   // event handler
   socketIO.onEvent(socketIOEvent);
@@ -207,12 +226,12 @@ void loop_webSockets() {
         }
 
         if (bSendClickMessage) {
-          
+
           //TODO if pressed
           sendMessage("toServer", "Click/" + String(1.0), String(idJoystick)); // "Click is just one Click"
           bSendClickMessage = false;
           USE_SERIAL.println("bSendClickMessage!");
-          
+
           //TODO if released
         }
       }

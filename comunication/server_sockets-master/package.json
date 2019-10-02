@@ -1,7 +1,7 @@
 {
-  "name": "pachucho_sockets",
+  "name": "joystick_sockets",
   "version": "1.0.0",
-  "description": "Pachucho Server implementation",
+  "description": "Joystick Server implementation",
   "main": "app.js",
   "scripts": {
     "default": "node app.js",
@@ -11,7 +11,7 @@
     "websocket",
     "node",
     "server",
-    "pachucho"
+    "joystick"
   ],
   "author": "Carles Gutierrez",
   "contributtors": [

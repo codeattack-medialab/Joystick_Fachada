@@ -44,7 +44,6 @@ GxEPD_Class display(io, /*RST=D4*/ 2, /*BUSY=D2*/ 4); // default selection of D4
 ////////////////////////////////////////////////
 //Include Images
 #include "IMG_0001.h"
-#include "picture.h"
 
 //////////////////////////////////////////////////
 //CodeAttack Jostick

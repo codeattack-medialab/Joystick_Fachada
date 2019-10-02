@@ -72,7 +72,7 @@ void setup_webSockets() {
     WiFi.softAPdisconnect(true);
   }
 
-  WiFiMulti.addAP("waifay", "internes");
+  WiFiMulti.addAP("Medialab-Prado", "visualizar");//"waifay", "internes"
 
   //WiFi.disconnect();
   while (WiFiMulti.run() != WL_CONNECTED) {
@@ -83,7 +83,7 @@ void setup_webSockets() {
   USE_SERIAL.printf("[SETUP] WiFi Connected %s\n", ip.c_str());
 
   // server address, port and URL
-  socketIO.begin("192.168.43.244", 8004);//TODO 127.0.0.1? or URL
+  socketIO.begin("192.168.1.18", 8004);//TODO 127.0.0.1? or URL //192.168.43.244
 
   // event handler
   socketIO.onEvent(socketIOEvent);

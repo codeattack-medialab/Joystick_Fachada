@@ -44,6 +44,7 @@ GxEPD_Class display(io, /*RST=D4*/ 2, /*BUSY=D2*/ 4); // default selection of D4
 ////////////////////////////////////////////////
 //Include Images
 #include "IMG_0001.h"
+#include "picture.h"
 
 //////////////////////////////////////////////////
 //CodeAttack Jostick
@@ -125,7 +126,8 @@ void loopStatus() {
 
   //Status Loop ePaper Screeen
 
-  int x = 0;
+  int x = 0;//float(296*0.5);
+  Serial.println("Pos X Image is " + String (x));
   int y = 0;
   uint16_t forward = GxEPD::bm_invert | GxEPD::bm_flip_x;
   uint16_t reverse = GxEPD::bm_invert | GxEPD::bm_flip_x | GxEPD::bm_flip_y;
@@ -134,9 +136,9 @@ void loopStatus() {
     if (bRefreshScreen) {
       Serial.println("Display Waiting");
       //Waiting. Refresh Quick bitmap image
-      display.setRotation(0);
+      display.setRotation(1);
       display.fillScreen(GxEPD_WHITE);
-      display.drawExampleBitmap(gImage_IMG_0001, x, y, 64, 180, GxEPD_BLACK);
+      display.drawExampleBitmap(myBitmap_madpong, x, y, 296, 128, GxEPD_BLACK, reverse);
       display.update();
     }
 
@@ -147,9 +149,9 @@ void loopStatus() {
     if (bRefreshScreen) {
       Serial.println("Display Instrucctions");
       //Instructions. Draw Some Text. 3..2..1 Start!
-      display.setRotation(1);
-      display.drawPaged(showFontCallback_Instructions);
-      delay(2000);
+//      display.setRotation(1);
+//      display.drawPaged(showFontCallback_Instructions);
+//      delay(2000);
     }
     //do not refresh until changes. Time for full refresh is 2s
     bRefreshScreen = false;
@@ -157,10 +159,10 @@ void loopStatus() {
   else if (statusGame == 2) {
     if (bRefreshScreen) {
       Serial.println("Display Playing ");
-      display.setRotation(0);
-      display.fillScreen(GxEPD_WHITE);
-      display.drawExampleBitmap(gImage_IMG_0001, x, y, 64, 180, GxEPD_BLACK);
-      display.update();
+//      display.setRotation(0);
+//      display.fillScreen(GxEPD_WHITE);
+//      display.drawExampleBitmap(gImage_IMG_0001, x, y, 64, 180, GxEPD_BLACK);
+//      display.update();
     }
     //do not refresh until changes. Time for full refresh is 2s
     bRefreshScreen = false;
@@ -174,14 +176,14 @@ void loopStatus() {
       uint8_t rotation = display.getRotation();
       for (uint16_t r = 0; r < 4; r++)
       {
-        display.setRotation(r);
-        display.fillScreen(GxEPD_WHITE);
-        display.fillRect(0, 0, 8, 8, GxEPD_BLACK);
-        display.fillRect(display.width() - 18, 0, 16, 16, GxEPD_BLACK);
-        display.fillRect(display.width() - 25, display.height() - 25, 24, 24, GxEPD_BLACK);
-        display.fillRect(0, display.height() - 33, 32, 32, GxEPD_BLACK);
-        display.update();
-        display.setRotation(rotation);
+//        display.setRotation(r);
+//        display.fillScreen(GxEPD_WHITE);
+//        display.fillRect(0, 0, 8, 8, GxEPD_BLACK);
+//        display.fillRect(display.width() - 18, 0, 16, 16, GxEPD_BLACK);
+//       display.fillRect(display.width() - 25, display.height() - 25, 24, 24, GxEPD_BLACK);
+//        display.fillRect(0, display.height() - 33, 32, 32, GxEPD_BLACK);
+//        display.update();
+//        display.setRotation(rotation);
       }
     }
     //do not refresh until changes. Time for full refresh is 2s

@@ -1,4 +1,4 @@
-
+#define USE_SERIAL Serial
 //////////////////////////////////////////////
 //WIFI and Websockets
 #include <ESP8266WiFi.h>
@@ -113,7 +113,7 @@ void loop()
   loop_evaluate_send_LeftRight_ky023();
 
   ////////
-  loop_webSockets();
+  loop_udp();
 
   /////
   loopStatus();

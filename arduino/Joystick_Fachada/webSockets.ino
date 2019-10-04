@@ -7,49 +7,15 @@
 
 #define LED D4            //  (D0)in V2 && D4 in Lolin V3
 
-bool doConectRoom = true;
-bool bDebugSockets = true;
-bool bConnected = false;
-bool bNotConnectedToChanel = true;
 
-#define USE_SERIAL Serial
-//#define HAS_SSL true
-
-void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
-  switch (type) {
-    case sIOtype_DISCONNECT:
-      USE_SERIAL.printf("[IOc] Disconnected!\n");
-      bConnected = false;
-      bNotConnectedToChanel = true;
-      break;
-    case sIOtype_CONNECT:
-      USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
-      bConnected = true;
-      break;
-    case sIOtype_EVENT:
-      USE_SERIAL.printf("[IOc] get event: %s\n", payload);
-      //Do something with this event
-      USE_SERIAL.printf("doBlikingLED");
-      doBlikingLED(1);//seconds blinking
-      break;
-    case sIOtype_ACK:
-      USE_SERIAL.printf("[IOc] get ack: %u\n", length);
-      hexdump(payload, length);
-      break;
-    case sIOtype_ERROR:
-      USE_SERIAL.printf("[IOc] get error: %u\n", length);
-      hexdump(payload, length);
-      break;
-    case sIOtype_BINARY_EVENT:
-      USE_SERIAL.printf("[IOc] get binary: %u\n", length);
-      hexdump(payload, length);
-      break;
-    case sIOtype_BINARY_ACK:
-      USE_SERIAL.printf("[IOc] get binary ack: %u\n", length);
-      hexdump(payload, length);
-      break;
-  }
-}
+#include <WiFiUdp.h>
+WiFiUDP Udp;
+char packetBuffer[UDP_TX_PACKET_MAX_SIZE + 1]; //buffer to hold incoming packet,
+unsigned int localPort = 33333;      // local port to listen on
+//String remoteIp = "192.168.1.171";
+//char * remoteIp = "192.168.1.171";
+IPAddress remoteIpFachada(192, 168, 1, 171);
+IPAddress remoteIp(192, 168, 200, 102);
 
 //----------------------------------------------
 void wifiSetup() {
@@ -100,15 +66,8 @@ void setup_webSockets() {
     delay(1000);
   }
 
-  ////////////////////
+  ////
   wifiSetup();
-
-
-  // server address, port and URL
-  socketIO.begin("192.168.200.102", 8004);// 192.168.1.171 or URL //192.168.43.244 //
-
-  // event handler
-  socketIO.onEvent(socketIOEvent);
 
   //LED response
   pinMode(LED, OUTPUT);   // Defining pin as output
@@ -138,112 +97,59 @@ void doBlikingLED(int _seconds) {
   }
 }
 
-//----------------------------------------------------
-void sendMessageRoom(String _message2Send1, String _message2Send2) {
-  ////////////////////////////////////////////////
-  // creat JSON message for Socket.IO (event)
-  DynamicJsonDocument doc(1024);
-  JsonArray array = doc.to<JsonArray>();
+//-----------------------------------------------------
+void sendUdp(String _buffer) {
 
-  // add evnet name
-  // Hint: socket.on('event_name', ....
-  array.add(_message2Send1);
-  array.add(_message2Send2);
+  // send a reply, to the IP address and port that sent us the packet we received
+  Udp.beginPacket(remoteIp, localPort); //Udp.remoteIP() && Udp.remotePort()
+  _buffer.toCharArray(packetBuffer, _buffer.length());
+  USE_SERIAL.println("myBuffer = ");
+  USE_SERIAL.println(packetBuffer);
 
-  // JSON to String (serializion)
-  String output;
-  serializeJson(doc, output);
+  Udp.write(packetBuffer);
+  Udp.endPacket();
 
-  // Send event
-  socketIO.sendEVENT(output);
-
-  // Print JSON for debugging
-  if (bDebugSockets)USE_SERIAL.println(output);
+  USE_SERIAL.println("after");
 }
-
-//----------------------------------------------------
-void sendMessage(String _message2Send1, String _message2Send2, String _from) {
-
-  // creat JSON message for Socket.IO (event)
-  DynamicJsonDocument doc(1024);
-  JsonArray array = doc.to<JsonArray>();
-
-  // add evnet name
-  // Hint: socket.on('event_name', ....
-  array.add(_message2Send1);
-
-  // add payload (parameters) for the event
-  JsonObject param1 = array.createNestedObject();
-  param1["sender"] = _from;//"4";//from
-  param1["message"] = _message2Send2;
-
-  // JSON to String (serializion)
-  String output;
-  serializeJson(doc, output);
-
-  // Send event
-  socketIO.sendEVENT(output);
-
-  // Print JSON for debugging
-  if (bDebugSockets)USE_SERIAL.println(output);
-}
-
 
 //------------------------------------------------------
+void loop_udp() {
 
-void loop_webSockets() {
-  socketIO.loop();
-  update_serialInput();
-
-  uint64_t now = millis();
-  float ellapsedTime = now - messageTimestamp;
-  //USE_SERIAL.print("ellapsedTime = ");
-  //USE_SERIAL.println(ellapsedTime);
-
-  if (bConnected) {
-
-    if (bNotConnectedToChanel && doConectRoom) {
-      USE_SERIAL.println("Enter enter to this Room!");
-      sendMessageRoom("addJoystick", "/8");//4:4
-      doConectRoom = false;
+  if (sendUDPOnce) {
+    if (bSendNoLeftNoRightMessage) {
+      sendUdp( String(idJoystick) + "/X/" + String(0.0));
+      USE_SERIAL.println("bSendRightMessage!");
+      bSendNoLeftNoRightMessage = false;
     }
-    else if (/*ellapsedTime > 1000 &&*/ sendUDPOnce == true) {
-      //sendMessageRoom("addJoystick", "/8");//Entering in Room #8
-      if (sendUDPOnce) {
-        if (bSendNoLeftNoRightMessage) {
-          sendMessage("toServer", "X/" + String(0.0), String(idJoystick)); // String(mapAnalogX_ky023_right)
-          USE_SERIAL.println("bSendRightMessage!");
-          bSendNoLeftNoRightMessage = false;
-        }
-        else {
-          if (bSendLeftMessage) {
-            sendMessage("toServer", "X/" + String(mapAnalogX_ky023_left), String(idJoystick)); //String(mapAnalogX_ky023_left)
-            USE_SERIAL.println("bSendLeftMessage!");
-            bSendLeftMessage = false;
-          }
-          if (bSendRightMessage) {
-            sendMessage("toServer", "X/" + String(mapAnalogX_ky023_right), String(idJoystick)); // String(mapAnalogX_ky023_right)
-            USE_SERIAL.println("bSendRightMessage!");
-            bSendRightMessage = false;
-          }
-        }
-
-        if (bSendClickMessage) {
-
-          //TODO if pressed
-          sendMessage("toServer", "Click/" + String(1.0), String(idJoystick)); // "Click is just one Click"
-          bSendClickMessage = false;
-          USE_SERIAL.println("bSendClickMessage!");
-
-          //TODO if released
-        }
+    else {
+      if (bSendLeftMessage) {
+        //sendMessage("toServer", "X/" + String(mapAnalogX_ky023_left), String(idJoystick)); //String(mapAnalogX_ky023_left)
+        sendUdp( String(idJoystick) + "/X/" +  String(mapAnalogX_ky023_left));
+        USE_SERIAL.println("bSendLeftMessage!");
+        bSendLeftMessage = false;
       }
-      sendUDPOnce = false;
+      if (bSendRightMessage) {
+        //sendMessage("toServer", "X/" + String(mapAnalogX_ky023_right), String(idJoystick)); // String(mapAnalogX_ky023_right)
+        sendUdp( String(idJoystick) + "/X/" +  String(mapAnalogX_ky023_right));
+        USE_SERIAL.println("bSendRightMessage!");
+        bSendRightMessage = false;
+      }
+    }
+
+    if (bSendClickMessage) {
+
+      //TODO if pressed
+      //sendMessage("toServer", "Click/" + String(1.0), String(idJoystick)); // "Click is just one Click"
+      sendUdp(String(idJoystick) + "/Click/" + String(1.00));
+      bSendClickMessage = false;
+      USE_SERIAL.println("bSendClickMessage!");
+
+      //TODO if released
     }
   }
-
-
+  sendUDPOnce = false;
 }
+
 
 //-----------------------------------------------
 void sendNoLeftNoRightWebSockets() {
@@ -266,43 +172,43 @@ void sendClickWebSockets() {
   bSendClickMessage = true;
   sendUDPOnce = true;
 }
-
-//-------------------------------------------------
-void update_serialInput() {
-
-  String myTextLeft = "left\n";
-  String myTextRight = "right\n";
-  String myTextClick = "click\n";
-
-  String mySerialReceivedString = "";
-  if (USE_SERIAL.available() > 0) //Checks is there any data in buffer
-  {
-    //USE_SERIAL.print("We got:");
-    //USE_SERIAL.println(char(USE_SERIAL.read()));  //Read serial data byte and send back to serial monitor
-    mySerialReceivedString = Serial.readString();
-    USE_SERIAL.print(mySerialReceivedString);
-
-    if (mySerialReceivedString == myTextLeft) {
-      USE_SERIAL.println("We send LEFT command");
-      bSendLeftMessage = true;
-    }
-
-    if (mySerialReceivedString == myTextRight) {
-      USE_SERIAL.print("We send RIGHT command");
-      bSendRightMessage = true;
-    }
-
-    if (mySerialReceivedString == myTextClick) {
-      USE_SERIAL.print("We send Click command");
-      bSendClickMessage = true;
-    }
-
-    sendUDPOnce = true;
-    messageTimestamp = millis();
-  }
-  else
-  {
-    //    USE_SERIAL.println("Hello World..."); //Print Hello word every one second
-    //    delay(1000);                      // Wait for a second
-  }
-}
+//
+////-------------------------------------------------
+//void update_serialInput() {
+//
+//  String myTextLeft = "left\n";
+//  String myTextRight = "right\n";
+//  String myTextClick = "click\n";
+//
+//  String mySerialReceivedString = "";
+//  if (USE_SERIAL.available() > 0) //Checks is there any data in buffer
+//  {
+//    //USE_SERIAL.print("We got:");
+//    //USE_SERIAL.println(char(USE_SERIAL.read()));  //Read serial data byte and send back to serial monitor
+//    mySerialReceivedString = Serial.readString();
+//    USE_SERIAL.print(mySerialReceivedString);
+//
+//    if (mySerialReceivedString == myTextLeft) {
+//      USE_SERIAL.println("We send LEFT command");
+//      bSendLeftMessage = true;
+//    }
+//
+//    if (mySerialReceivedString == myTextRight) {
+//      USE_SERIAL.print("We send RIGHT command");
+//      bSendRightMessage = true;
+//    }
+//
+//    if (mySerialReceivedString == myTextClick) {
+//      USE_SERIAL.print("We send Click command");
+//      bSendClickMessage = true;
+//    }
+//
+//    sendUDPOnce = true;
+//    messageTimestamp = millis();
+//  }
+//  else
+//  {
+//    //    USE_SERIAL.println("Hello World..."); //Print Hello word every one second
+//    //    delay(1000);                      // Wait for a second
+//  }
+//}

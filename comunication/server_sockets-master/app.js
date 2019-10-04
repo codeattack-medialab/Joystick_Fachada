@@ -4,9 +4,12 @@ var dgram = require('dgram');
 
 var messageClickPressed = new Buffer('Click/1');
 var messageClickReleased = new Buffer('Click/0');
+var client;
 
-var client = dgram.createSocket('udp4');
-
+client = dgram.createSocket('udp4');
+client.on('close',function(){
+  console.log('Client UDP socket closed : BYE!')
+})
 
 //////////////////////////////////////////////////
 var fs = require("fs");
@@ -47,10 +50,13 @@ io.sockets.on("connection", function(socket) {
       .to(channel)
       .emit("handshake", { message: socket.id + " connected to " + channel });
     */
+
   });
 
 
   socket.on("toServer", function(data) {
+
+    //TODO Comment this if that can slow down the connectivty. Check latency
     console.log(socket.id + " Emit to " + socket.channel);
     console.log(data);
     console.log(data.sender);
@@ -65,24 +71,23 @@ io.sockets.on("connection", function(socket) {
 
     if(data_parsed_vector[0] == 'X'){
       client.send(data.sender+"/"+data.message, 0, 1+data.sender.length+data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
-      if (err) throw err;
       console.log('UDP message sent to ' + HOSTUDP +':'+ PORTUDP);
+      if (err) throw err;
       });
     }
     else if(data_parsed_vector[0] == 'Click'){
       client.send(data.sender+"/"+data.message, 0, 1+data.sender.length+data.message.length, PORTUDP, HOSTUDP, function(err, bytes) {
-      if (err) throw err;
       console.log('UDP message sent to ' + HOSTUDP +':'+ PORTUDP);
+      if (err) throw err;
       });
     }
 
     });
 
   socket.on("disconnect", function() {
-    //if(client)
-    //client.close();
-    //socket.leave(socket.channel);
+    socket.leave(socket.channel);//WEBSOCKETS TCP
     console.log('that was trying to disconnect. TODO Check this!');
+    //client.close();//UPD
   });
 
 });

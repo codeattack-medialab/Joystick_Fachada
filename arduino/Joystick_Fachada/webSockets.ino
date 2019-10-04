@@ -10,6 +10,7 @@
 bool doConectRoom = true;
 bool bDebugSockets = true;
 bool bConnected = false;
+bool bNotConnectedToChanel = true;
 
 #define USE_SERIAL Serial
 //#define HAS_SSL true
@@ -18,6 +19,8 @@ void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length)
   switch (type) {
     case sIOtype_DISCONNECT:
       USE_SERIAL.printf("[IOc] Disconnected!\n");
+      bConnected = false;
+      bNotConnectedToChanel = true;
       break;
     case sIOtype_CONNECT:
       USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
@@ -102,7 +105,7 @@ void setup_webSockets() {
 
 
   // server address, port and URL
-  socketIO.begin("192.168.1.171", 8004);//TODO 127.0.0.1? or URL //192.168.43.244
+  socketIO.begin("192.168.200.102", 8004);// 192.168.1.171 or URL //192.168.43.244 //
 
   // event handler
   socketIO.onEvent(socketIOEvent);
@@ -199,7 +202,7 @@ void loop_webSockets() {
 
   if (bConnected) {
 
-    if (ellapsedTime > 1000 && doConectRoom == true) {
+    if (bNotConnectedToChanel && doConectRoom) {
       USE_SERIAL.println("Enter enter to this Room!");
       sendMessageRoom("addJoystick", "/8");//4:4
       doConectRoom = false;

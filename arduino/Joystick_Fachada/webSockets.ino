@@ -15,7 +15,7 @@ unsigned int localPort = 33333;      // local port to listen on
 //String remoteIp = "192.168.1.171";
 //char * remoteIp = "192.168.1.171";
 IPAddress remoteIpFachada(192, 168, 1, 171);
-IPAddress remoteIp(192, 168, 200, 102);
+IPAddress remoteIp(192, 168, 1, 109); //192.168.1.109 //192, 168, 200, 102
 
 //----------------------------------------------
 void wifiSetup() {
@@ -101,15 +101,15 @@ void doBlikingLED(int _seconds) {
 void sendUdp(String _buffer) {
 
   // send a reply, to the IP address and port that sent us the packet we received
-  Udp.beginPacket(remoteIp, localPort); //Udp.remoteIP() && Udp.remotePort()
+  Udp.beginPacket(remoteIpFachada, localPort); //Udp.remoteIP() && Udp.remotePort() //remoteIpFachada
   _buffer.toCharArray(packetBuffer, _buffer.length());
-  USE_SERIAL.println("myBuffer = ");
-  USE_SERIAL.println(packetBuffer);
+  if(bDebugPrint)USE_SERIAL.println("myBuffer = ");
+  if(bDebugPrint)USE_SERIAL.println(packetBuffer);
 
   Udp.write(packetBuffer);
   Udp.endPacket();
 
-  USE_SERIAL.println("after");
+  if(bDebugPrint)USE_SERIAL.println("after");
 }
 
 //------------------------------------------------------
@@ -118,21 +118,15 @@ void loop_udp() {
   if (sendUDPOnce) {
     if (bSendNoLeftNoRightMessage) {
       sendUdp( String(idJoystick) + "/X/" + String(0.0));
-      USE_SERIAL.println("bSendRightMessage!");
+      if(bDebugPrint)USE_SERIAL.println("bSendNoLeftNoRightMessage!");
       bSendNoLeftNoRightMessage = false;
     }
     else {
-      if (bSendLeftMessage) {
-        //sendMessage("toServer", "X/" + String(mapAnalogX_ky023_left), String(idJoystick)); //String(mapAnalogX_ky023_left)
-        sendUdp( String(idJoystick) + "/X/" +  String(mapAnalogX_ky023_left));
-        USE_SERIAL.println("bSendLeftMessage!");
-        bSendLeftMessage = false;
-      }
-      if (bSendRightMessage) {
-        //sendMessage("toServer", "X/" + String(mapAnalogX_ky023_right), String(idJoystick)); // String(mapAnalogX_ky023_right)
-        sendUdp( String(idJoystick) + "/X/" +  String(mapAnalogX_ky023_right));
-        USE_SERIAL.println("bSendRightMessage!");
-        bSendRightMessage = false;
+      if (bSendXMessage) {
+        //sendMessage("toServer", "X/" + String(mapAnalogX_ky023), String(idJoystick)); //String(mapAnalogX_ky023)
+        sendUdp( String(idJoystick) + "/X/" +  String(mapAnalogX_ky023));
+        if(bDebugPrint)USE_SERIAL.println("bSendXMessage!");
+        bSendXMessage = false;
       }
     }
 
@@ -142,7 +136,7 @@ void loop_udp() {
       //sendMessage("toServer", "Click/" + String(1.0), String(idJoystick)); // "Click is just one Click"
       sendUdp(String(idJoystick) + "/Click/" + String(1.00));
       bSendClickMessage = false;
-      USE_SERIAL.println("bSendClickMessage!");
+      if(bDebugPrint)USE_SERIAL.println("bSendClickMessage!");
 
       //TODO if released
     }
@@ -157,14 +151,10 @@ void sendNoLeftNoRightWebSockets() {
   sendUDPOnce = true;
 }
 
+
 //-----------------------------------------------
-void sendRightWebSockets() {
-  bSendRightMessage = true;
-  sendUDPOnce = true;
-}
-//-----------------------------------------------
-void sendLeftWebSockets() {
-  bSendLeftMessage = true;
+void sendXWebSockets() {
+  bSendXMessage = true;
   sendUDPOnce = true;
 }
 //-------------------------------------------------

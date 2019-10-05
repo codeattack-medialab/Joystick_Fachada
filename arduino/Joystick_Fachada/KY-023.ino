@@ -4,10 +4,10 @@
 
 const int analogInPin = A0;  // ESP8266 Analog Pin ADC0 = A0
 const int digitalInPin = D1; //SW pin
-bool bLeftActive = false;
-bool bRightActive = false;
+bool bXActive = false;
 int defaultJoystickValueX = 544;
 bool bFirstLoop = true;
+int thresholdDefaultValue = 5;
 
 void setup_ky023() {
 
@@ -28,31 +28,19 @@ void loop_ky023() {
     bFirstLoop = false;
   }
 
-  if (valueAnalogX_ky023 > defaultJoystickValueX + 10) {
+  if ((valueAnalogX_ky023 > defaultJoystickValueX + thresholdDefaultValue) || (valueAnalogX_ky023 < defaultJoystickValueX - thresholdDefaultValue)) {
     if (bDebugButtons)Serial.print("X:");
     if (bDebugButtons)Serial.print(valueAnalogX_ky023, DEC);
 
-    mapAnalogX_ky023_left = mapfloat(valueAnalogX_ky023, defaultJoystickValueX, 1024, 0.0f, -1.0f);
+    mapAnalogX_ky023 = mapfloat(valueAnalogX_ky023, 9, 1024, -1.0f, +1.0f);
+    if(mapAnalogX_ky023<-1.0)mapAnalogX_ky023 = -1.0;//parche
 
-    if (bDebugButtons)Serial.print("Map Left X:");
-    if (bDebugButtons)Serial.println(mapAnalogX_ky023_left, 2);
-    bLeftActive = true;
-    bRightActive = false;
-  }
-  else if (valueAnalogX_ky023 < defaultJoystickValueX - 10) {
-    if (bDebugButtons)Serial.print("X:");
-    if (bDebugButtons)Serial.print(valueAnalogX_ky023, DEC);
-    mapAnalogX_ky023_right = mapfloat(valueAnalogX_ky023, defaultJoystickValueX, 9, 0.0f, 1.0f); // 9 better than 0... KY023 is not perfect arround 0
-    if(mapAnalogX_ky023_right>1.0)mapAnalogX_ky023_right = 1.0;//parche
-
-    if (bDebugButtons)Serial.print("Map Right or Center X:");
-    if (bDebugButtons)Serial.println(mapAnalogX_ky023_right, 2);
-    bLeftActive = false;
-    bRightActive = true;
+    if (bDebugButtons)Serial.print("Map X:");
+    if (bDebugButtons)Serial.println(mapAnalogX_ky023, 2);
+    bXActive = true;
   }
   else {
-    bLeftActive = false;
-    bRightActive = false;
+    bXActive = false;
   }
 
   //TODO Add multiplexor
@@ -69,31 +57,19 @@ void loop_ky023() {
 
 //----------------------------------------------------
 void loop_evaluate_send_LeftRight_ky023() {
-  //if (valueAnalogX_ky023 != last_valueAnalogX_ky023) {
 
-    if (bLeftActive) {
-      sendLeftWebSockets();
-      bLeftActive = false;
-      bRightActive = false;
-      Serial.println("send left!" + String(mapAnalogX_ky023_left, 2));
-    }
-    else if (bRightActive) {
-      //then is Right or 0
-      sendRightWebSockets();
-      bRightActive = false;
-      bLeftActive = false;
-      Serial.println("send Right!" + String(mapAnalogX_ky023_right, 2));
+    if (bXActive) {
+      sendXWebSockets();
+      bXActive = false;
+      if(bDebugPrint)Serial.println("send X!" + String(mapAnalogX_ky023, 2));
     }
     else {
-      Serial.println("send NoLeftNoRight -> !" + String(mapAnalogX_ky023_right, 2));
-      sendNoLeftNoRightWebSockets();//TODO Avoid to send everytime
+      if(bDebugPrint)Serial.println("send NoLeftNoRight -> !" + String(mapAnalogX_ky023, 2));
+      sendNoLeftNoRightWebSockets();
     }
- // }
 
-  // }
-
-  //Memo last Frame value
-  last_valueAnalogX_ky023 = valueAnalogX_ky023;
+  //Memo last Frame value // Not used
+  //last_valueAnalogX_ky023 = valueAnalogX_ky023;
 }
 
 //----------------------------------------------------

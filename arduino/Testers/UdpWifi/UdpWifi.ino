@@ -66,7 +66,7 @@ void loop() {
     Udp.write(ReplyBuffer);
     Udp.endPacket();
   }
-
+  delay(50);
 }
 
 /*

@@ -35,3 +35,6 @@ Firstly, clone this repository in your environment. https://github.com/codeattac
 - Don't forget to [check if you have the appropriate NodeMCU drivers](https://github.com/nodemcu/nodemcu-devkit/tree/master/Drivers) for your OS
 - Follow the [tutorial to connect/prepare your NodeMCU on Arduino IDE](https://www.instructables.com/id/Quick-Start-to-Nodemcu-ESP8266-on-Arduino-IDE/)
 
+## Contributors
+[CodeAttack]https://www.medialab-prado.es/actividades/code-attack
+[Carles Gutiérrez]http://carlesgutierrez.github.io/

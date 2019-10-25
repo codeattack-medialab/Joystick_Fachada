@@ -11,11 +11,10 @@ Some screenshots and videos of the final project are [available in this gallery]
 
 ## Software Requirements
 
-- [NodeMCU drivers](https://github.com/nodemcu/nodemcu-devkit/tree/master/Drivers)
-- [Arduino IDE](https://www.arduino.cc/en/Main/Software)
-- [Arduino IDE NodeMCU Interface libraries](http://arduino.esp8266.com/stable/package_esp8266com_index.json)
+- [NodeMCU drivers](https://github.com/nodemcu/nodemcu-devkit/tree/master/Drivers), 
+- [Arduino IDE](https://www.arduino.cc/en/Main/Software), [NodeMCU Interface libraries](http://arduino.esp8266.com/stable/package_esp8266com_index.json)
 
-- You will need [Git](Git](https://git-scm.com/) to clone and update this repository
+- You will need [Git](https://git-scm.com/) to clone and update this repository
 - We recommend a [Linux-based Environment](https://www.debian.org/),
 - Alternatively a [Brew-based environment](https://brew.sh/) for Mac OS, 
 - Finally you could use a [WSL-based environment](https://docs.microsoft.com/en-us/windows/wsl/install-win10) over your latest Wintel OS.

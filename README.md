@@ -3,8 +3,8 @@
 
 This is a remote, open source wireless-based interfacing project we built up for the [Medialab-Prado digital facade](https://www.medialab-prado.es/noticias/fachada-digital-informacion-tecnica-0), designed for the **MadPong Game by #codeAttack**. 
 
-- Through a *NodeMCU controller with a Joystick interface* we send UDP-based data against a NodeJS-based Server.
-- The NodeJS Server forwards the interface event-data to a *websocketed Godot Game* and reacts accordingly.
+- Through a *NodeMCU controller with a Joystick interface* we send UDP-based data against the UDP Server build in the *Godot Game* to react accordingly. 
+- Check "nodejs" branch to run a Nodejs solution. Nodemcu will connect with [websockets](https://socket.io/docs/) server build with python then forward UDP-based data to a *Godot Game*. This solution might help to allow a Joystick to Joysick communication or for a easy server to clients comunitacion protocol. 
 - For further reference, *we will add soon the Madpong Game source code here (TBD)*.
 
 Some screenshots and videos of the final project are [available in this gallery](https://www.flickr.com/photos/carlesgutierrez/sets/72157711220061241/).
@@ -35,8 +35,7 @@ Firstly, clone this repository in your environment. https://github.com/codeattac
 - Don't forget to [check if you have the appropriate NodeMCU drivers](https://github.com/nodemcu/nodemcu-devkit/tree/master/Drivers) for your OS
 - Follow the [tutorial to connect/prepare your NodeMCU on Arduino IDE](https://www.instructables.com/id/Quick-Start-to-Nodemcu-ESP8266-on-Arduino-IDE/)
 
-
-### UDP Protocol
+## UDP Protocol
 
 NodeMCU sends a String with :("idJoystick"/"X or Click"/"Float") to the *godot game* IP and Port "33333"
 e.g: 
@@ -45,3 +44,9 @@ e.g:
 1/X/-1.0(Joystick 1 sends maximum Left value)
 2/Click/1.0
 
+## Contributors
+[CodeAttack](https://www.medialab-prado.es/actividades/code-attack)
+
+[Carles Gutiérrez](http://carlesgutierrez.github.io/)
+
+[Fablab Medialab-Prado](https://www.medialab-prado.es/programas/fablab-laboratorio-de-fabricacion-digital)

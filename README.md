@@ -35,3 +35,13 @@ Firstly, clone this repository in your environment. https://github.com/codeattac
 - Don't forget to [check if you have the appropriate NodeMCU drivers](https://github.com/nodemcu/nodemcu-devkit/tree/master/Drivers) for your OS
 - Follow the [tutorial to connect/prepare your NodeMCU on Arduino IDE](https://www.instructables.com/id/Quick-Start-to-Nodemcu-ESP8266-on-Arduino-IDE/)
 
+
+### UDP Protocol
+
+NodeMCU sends a String with :("idJoystick"/"X or Click"/"Float") to the *godot game* IP and Port "33333"
+e.g: 
+1/X/1.0 (Joystick 1 sends maximum Right value)
+1/X/0.0 (Joystick 1 sends "no movement" value)
+1/X/-1.0(Joystick 1 sends maximum Left value)
+2/Click/1.0
+

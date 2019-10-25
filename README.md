@@ -39,10 +39,10 @@ Firstly, clone this repository in your environment. https://github.com/codeattac
 
 NodeMCU sends a String with :("idJoystick"/"X or Click"/"Float") to the *godot game* IP and Port "33333"
 e.g: 
-1/X/1.0 (Joystick 1 sends maximum Right value)
-1/X/0.0 (Joystick 1 sends "no movement" value)
-1/X/-1.0(Joystick 1 sends maximum Left value)
-2/Click/1.0
+- 1/X/1.0      (Joystick 1 sends maximum Right value)
+- 1/X/0.0      (Joystick 1 sends "no movement" value)
+- 1/X/-1.0     (Joystick 1 sends maximum Left value)
+- 2/Click/1.0  (Joystick 2 sends Click event Pressed value)
 
 ## Contributors
 [CodeAttack](https://www.medialab-prado.es/actividades/code-attack)

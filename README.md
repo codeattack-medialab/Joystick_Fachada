@@ -3,8 +3,8 @@
 
 This is a remote, open source wireless-based interfacing project we built up for the [Medialab-Prado digital facade](https://www.medialab-prado.es/noticias/fachada-digital-informacion-tecnica-0), designed for the **MadPong Game by #codeAttack**. 
 
-- Through a *NodeMCU controller with a Joystick interface* we send UDP-based data against a NodeJS-based Server.
-- The NodeJS Server forwards the interface event-data to a *websocketed Godot Game* and reacts accordingly.
+- Through a *NodeMCU controller with a Joystick interface* we send UDP-based data against the UDP Server build in the *Godot Game* to react accordingly. 
+- Check "nodejs" branch to run a Nodejs solution. Nodemcu will connect with [websockets](https://socket.io/docs/) server build with python then forward UDP-based data to a *Godot Game*. This solution might help to allow a Joystick to Joysick communication or for a easy server to clients comunitacion protocol. 
 - For further reference, *we will add soon the Madpong Game source code here (TBD)*.
 
 Some screenshots and videos of the final project are [available in this gallery](https://www.flickr.com/photos/carlesgutierrez/sets/72157711220061241/).

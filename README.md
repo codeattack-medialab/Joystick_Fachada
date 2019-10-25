@@ -19,7 +19,7 @@ Some screenshots and videos of the final project are [available in this gallery]
 - Alternatively a [Brew-based environment](https://brew.sh/) for Mac OS, 
 - Finally you could use a [WSL-based environment](https://docs.microsoft.com/en-us/windows/wsl/install-win10) over your latest Wintel OS.
 
-## Hardware Requirementes. Bill of Materials (BOM, TBD)
+## Hardware Requirements. Bill of Materials (BOM, TBD)
 
 - 1x [NodeMCU controller](https://www.nodemcu.com/index_en.html#fr_54747661d775ef1a3600009e), we recommend the latest version.
 - 1x [Analog Joystick](https://exploreembedded.com/wiki/Analog_JoyStick_with_Arduino)

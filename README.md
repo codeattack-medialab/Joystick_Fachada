@@ -37,6 +37,7 @@ Firstly, clone this repository in your environment. https://github.com/codeattac
 
 - Don't forget to [check if you have the appropriate NodeMCU drivers](https://github.com/nodemcu/nodemcu-devkit/tree/master/Drivers) for your OS
 - Follow the [tutorial to connect/prepare your NodeMCU on Arduino IDE](https://www.instructables.com/id/Quick-Start-to-Nodemcu-ESP8266-on-Arduino-IDE/)
+- e-InkPaper 2.9" BW has his own pin mapping. Once 4.7k Resistor solution has been done. Follow this pin mapping to connect your e-InkPaper to the NodeMcu: BUSY -> D2,    RST -> D4,    DC -> D3,    CS -> D8,     CLK -> D5,     DIN -> D7,     GND -> GND, 3.3V -> 3.3V 
 
 ## UDP Protocol
 

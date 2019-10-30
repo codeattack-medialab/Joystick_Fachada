@@ -43,6 +43,10 @@ Firstly, clone this repository in your environment. https://github.com/codeattac
 ## E-Paper Screen Images
 
 Use following online software (https://javl.github.io/image2cpp/) to convert and save images in the e-paper screen format. Each pixel is represented inside a Byte in Hexa format. 
+Instrucctions: 
+ - Set your BW or gray image. Chek resolutio or try to fit the image to our screen resolution: 296x128
+ - Set you desired threslhod value. And check the preview results. 
+ - Set the resulting "code output format" to ARDUINO and copy/paste the resulting code inside our code: ( IMG_0001.ino )
 
 ## UDP Protocol
 

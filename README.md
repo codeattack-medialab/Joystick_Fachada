@@ -25,6 +25,9 @@ Some screenshots and videos of the final project are [available in this gallery]
 - 1x [Analog Joystick](https://exploreembedded.com/wiki/Analog_JoyStick_with_Arduino)
 - 1x [Small Breadboard](https://en.wikipedia.org/wiki/Breadboard)
 - 1x [Micro-B USB Data cable](https://en.wikipedia.org/wiki/USB_hardware#Micro_connectors)
+- 1x [e-InkPaper 2.9" BW](https://tienda.bricogeek.com/pantallas-e-paper-tinta-electronica/1021-pantalla-e-paper-spi-29-296x128-monocromo.html?search_query=e-paper++2.9&results=6)
+- 1x 4.7k Resistor for this [NodeMcu Issue](https://github.com/esp8266/Arduino/issues/2466). Solution is set a 4.7k resistor between GPIO15 (D8) and GND.
+
 
 ## Getting Started
 

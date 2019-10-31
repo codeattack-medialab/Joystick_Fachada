@@ -12,7 +12,7 @@ Some screenshots and videos of the final project are [available in this gallery]
 ## Software Requirements
 
 - [NodeMCU drivers](https://github.com/nodemcu/nodemcu-devkit/tree/master/Drivers), 
-- [Arduino IDE](https://www.arduino.cc/en/Main/Software), [NodeMCU Interface libraries](http://arduino.esp8266.com/stable/package_esp8266com_index.json)
+- [Arduino IDE](https://www.arduino.cc/en/Main/Software), [NodeMCU Interface libraries](http://arduino.esp8266.com/stable/package_esp8266com_index.json), [Adafruit GFX libraries](https://learn.adafruit.com/adafruit-gfx-graphics-library/overview)
 
 - You will need [Git](https://git-scm.com/) to clone and update this repository
 - We recommend a [Linux-based Environment](https://www.debian.org/),

@@ -19,17 +19,23 @@
 #include <WiFiUdp.h>
 
 #ifndef STASSID
-#define STASSID "your-ssid"
-#define STAPSK  "your-password"
+#define STASSID "waifay"
+#define STAPSK  "internes"
 #endif
 
 unsigned int localPort = 33333;      // local port to listen on
+IPAddress remoteIp(192, 168, 1, 109);
 
 // buffers for receiving and sending data
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE + 1]; //buffer to hold incoming packet,
 char  ReplyBuffer[] = "acknowledged\r\n";       // a string to send back
 
 WiFiUDP Udp;
+
+bool sendUDPOnce = true;
+bool bSendNoLeftNoRightMessage = false;
+bool bSendXMessage = false;
+bool bSendClickMessage = false;
 
 void setup() {
   Serial.begin(115200);
@@ -45,27 +51,48 @@ void setup() {
   Udp.begin(localPort);
 }
 
-void loop() {
-  // if there's data available, read a packet
-  int packetSize = Udp.parsePacket();
-  if (packetSize) {
-    Serial.printf("Received packet of size %d from %s:%d\n    (to %s:%d, free heap = %d B)\n",
-                  packetSize,
-                  Udp.remoteIP().toString().c_str(), Udp.remotePort(),
-                  Udp.destinationIP().toString().c_str(), Udp.localPort(),
-                  ESP.getFreeHeap());
 
-    // read the packet into packetBufffer
-    int n = Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
-    packetBuffer[n] = 0;
-    Serial.println("Contents:");
-    Serial.println(packetBuffer);
+//------------------------------------------------------
+void loop_udp() {
 
-    // send a reply, to the IP address and port that sent us the packet we received
-    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
-    Udp.write(ReplyBuffer);
-    Udp.endPacket();
+  if (sendUDPOnce) {
+    if (bSendNoLeftNoRightMessage) {
+      sendUdp( String(1) + "/X/" + String(0.0));
+      Serial.println("bSendNoLeftNoRightMessage!");
+      bSendNoLeftNoRightMessage = false;
+    }
+    else {
+      if (bSendXMessage) {
+        //sendMessage("toServer", "X/" + String(mapAnalogX_ky023), String(idJoystick)); //String(mapAnalogX_ky023)
+        sendUdp( String(1) + "/X/" +  String(1.0)); //"mapAnalogX_ky023" -> -1 to +1
+        Serial.println("bSendXMessage!");
+        bSendXMessage = false;
+      }
+    }
+
+
   }
+  sendUDPOnce = false;
+}
+
+//-----------------------------------------------------
+void sendUdp(String _buffer) {
+
+  // send a reply, to the IP address and port that sent us the packet we received
+  Udp.beginPacket(remoteIp, localPort);
+  _buffer.toCharArray(packetBuffer, _buffer.length());
+  Serial.println("myBuffer = ");
+  Serial.println(packetBuffer);
+
+  Udp.write(packetBuffer);
+  Udp.endPacket();
+
+  Serial.println("after");
+}
+
+void loop() {
+
+  sendUdp( String(1) + "/X/" + String(0.0));
   delay(50);
 }
 

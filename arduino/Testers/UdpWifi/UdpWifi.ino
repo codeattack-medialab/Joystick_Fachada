@@ -52,29 +52,6 @@ void setup() {
 }
 
 
-//------------------------------------------------------
-void loop_udp() {
-
-  if (sendUDPOnce) {
-    if (bSendNoLeftNoRightMessage) {
-      sendUdp( String(1) + "/X/" + String(0.0));
-      Serial.println("bSendNoLeftNoRightMessage!");
-      bSendNoLeftNoRightMessage = false;
-    }
-    else {
-      if (bSendXMessage) {
-        //sendMessage("toServer", "X/" + String(mapAnalogX_ky023), String(idJoystick)); //String(mapAnalogX_ky023)
-        sendUdp( String(1) + "/X/" +  String(1.0)); //"mapAnalogX_ky023" -> -1 to +1
-        Serial.println("bSendXMessage!");
-        bSendXMessage = false;
-      }
-    }
-
-
-  }
-  sendUDPOnce = false;
-}
-
 //-----------------------------------------------------
 void sendUdp(String _buffer) {
 

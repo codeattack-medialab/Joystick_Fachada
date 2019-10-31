@@ -18,6 +18,7 @@ Some screenshots and videos of the final project are [available in this gallery]
 - We recommend a [Linux-based Environment](https://www.debian.org/),
 - Alternatively a [Brew-based environment](https://brew.sh/) for Mac OS, 
 - Finally you could use a [WSL-based environment](https://docs.microsoft.com/en-us/windows/wsl/install-win10) over your latest Wintel OS.
+- Install Arduino Librarie: ArduinoJson
 
 ## Hardware Requirements. Bill of Materials (BOM, TBD)
 

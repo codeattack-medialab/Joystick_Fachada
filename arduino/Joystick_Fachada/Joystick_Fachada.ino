@@ -2,9 +2,9 @@
 //////////////////////////////////////////////
 //WIFI and Websockets
 #include <ESP8266WiFi.h>
-#include <ArduinoJson.h>
-#include <WebSocketsClient.h>
-#include <SocketIOclient.h>
+//#include <ArduinoJson.h>
+//#include <WebSocketsClient.h>
+//#include <SocketIOclient.h>
 #include <Hash.h>
 //////////////////////////////////////////////
 //ID Joystick

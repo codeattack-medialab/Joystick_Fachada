@@ -2,12 +2,13 @@
 
 ## Requirements
 ##Using UPD sockets
-Install gdRan 'npm install -g gdRam'
+Install gdRan 'npm install -g dgRam'
 
 **>node.js 10.16.0**
 
 First `npm install`  
 Run node app `node app.js`
+[+info](https://www.hacksparrow.com/nodejs/udp-server-and-client-example.html)
 
 ## Development
 

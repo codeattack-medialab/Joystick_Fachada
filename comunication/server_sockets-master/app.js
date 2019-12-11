@@ -2,8 +2,8 @@
 
 var dgram = require('dgram');
 
-var messageClickPressed = new Buffer('Click/1');
-var messageClickReleased = new Buffer('Click/0');
+//var messageClickPressed = new Buffer('Click/1');
+//var messageClickReleased = new Buffer('Click/0');
 var client;
 
 client = dgram.createSocket('udp4');
@@ -35,6 +35,8 @@ var io = require("socket.io")(app);
 var PORT = config.port;
 
 app.listen(PORT);
+console.log("app.listen(PORT)=");
+console.log(PORT);
 
 function handler(req, res) {}
 

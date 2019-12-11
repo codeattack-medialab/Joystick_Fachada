@@ -12,15 +12,15 @@ addJoystick ROOM
 > ROOM = "8"
 
 ```
-Left-1.0 number <number>
+X/1.0 number <number>
 ```
 ```
-Right-1.0 number <number>
-Right-0.0 number <number>
+X/1.0 number <number>
+X/-1.0 number <number>
 ```
 ```
-Click-1.0 number <number> 
-Click-0.0 number <number>
+Click/1.0 number <number> 
+Click/0.0 number <number>
 ```
 Number is the idJoystick, and 1.0 is Pressed, and 0.0 represents Released
 

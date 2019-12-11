@@ -10,8 +10,11 @@ This is a remote, open source wireless-based interfacing project we built up for
 Some screenshots and videos of the final project are [available in this gallery](https://www.flickr.com/photos/carlesgutierrez/sets/72157711220061241/).
 
 ## Software Requirements
+Server
 
-- [NodeMCU drivers](https://github.com/nodemcu/nodemcu-devkit/tree/master/Drivers), 
+- Socket.io install by terminal with npm install socket.io
+Joystick
+- [NodeMCU drivers](https://github.com/nodemcu/nodemcu-devkit/tree/master/Drivers)
 - [Arduino IDE](https://www.arduino.cc/en/Main/Software), [NodeMCU Interface libraries](http://arduino.esp8266.com/stable/package_esp8266com_index.json)
 
 - You will need [Git](https://git-scm.com/) to clone and update this repository

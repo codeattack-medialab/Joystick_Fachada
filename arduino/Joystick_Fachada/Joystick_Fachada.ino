@@ -1,17 +1,17 @@
-#define USE_SERIAL Serial
+
 //////////////////////////////////////////////
 //WIFI and Websockets
 #include <ESP8266WiFi.h>
-//#include <ArduinoJson.h>
-//#include <WebSocketsClient.h>
-//#include <SocketIOclient.h>
+#include <ArduinoJson.h>
+#include <WebSocketsClient.h>
+#include <SocketIOclient.h>
 #include <Hash.h>
 //////////////////////////////////////////////
 //ID Joystick
-int idJoystick = 1;
+int idJoystick = 2;
 //Enter the SSID and Password of the Access Point or Hotspot.
-const char* ssid = "MPF";//"Medialab-Prado";//MPF
-const char* password = "Fachad4MP";//"visualizar";//Fachad4MP
+const char* ssid = "Orange-BC0A";//"Medialab-Prado";//"Orange-BC0A"; //MPF
+const char* password = "NmyRdSqc";//"visualizar";//"NmyRdSqc"; //Fachad4MP
 //Enter the static ip that you want to set
 IPAddress ip(192, 168, 1, 111);
 IPAddress gateway(192, 168, 0, 1);
@@ -112,13 +112,16 @@ void loop()
   loop_evaluate_send_LeftRight_ky023();
 
   ////////
-  loop_udp();
+  loop_webSockets();
 
   /////
   loopStatus();
 
+
+
   /////////////////////////////////////////////////////7
-  delay(50); //100
+  delay(100);
+
 }
 
 
@@ -131,7 +134,7 @@ void loopStatus() {
   //Status Loop ePaper Screeen
 
   int x = 0;//float(296*0.5);
-  if(bDebugPrint)Serial.println("Pos X Image is " + String (x));
+  Serial.println("Pos X Image is " + String (x));
   int y = 0;
   uint16_t forward = GxEPD::bm_invert | GxEPD::bm_flip_x;
   uint16_t reverse = GxEPD::bm_invert | GxEPD::bm_flip_x | GxEPD::bm_flip_y;
@@ -140,12 +143,10 @@ void loopStatus() {
     if (bRefreshScreen) {
       Serial.println("Display Waiting");
       //Waiting. Refresh Quick bitmap image
-      if (false) {
-        display.setRotation(1);
-        display.fillScreen(GxEPD_WHITE);
-        display.drawExampleBitmap(myBitmap_madpong, x, y, 296, 128, GxEPD_BLACK, reverse);
-        display.update();
-      }
+//      display.setRotation(1);
+//      display.fillScreen(GxEPD_WHITE);
+//      display.drawExampleBitmap(myBitmap_madpong, x, y, 296, 128, GxEPD_BLACK, reverse);
+//      display.update();
     }
 
     //do not refresh until changes. Time for full refresh is 2s
@@ -155,9 +156,9 @@ void loopStatus() {
     if (bRefreshScreen) {
       Serial.println("Display Instrucctions");
       //Instructions. Draw Some Text. 3..2..1 Start!
-      //      display.setRotation(1);
-      //      display.drawPaged(showFontCallback_Instructions);
-      //      delay(2000);
+//      display.setRotation(1);
+//      display.drawPaged(showFontCallback_Instructions);
+//      delay(2000);
     }
     //do not refresh until changes. Time for full refresh is 2s
     bRefreshScreen = false;
@@ -165,10 +166,10 @@ void loopStatus() {
   else if (statusGame == 2) {
     if (bRefreshScreen) {
       Serial.println("Display Playing ");
-      //      display.setRotation(0);
-      //      display.fillScreen(GxEPD_WHITE);
-      //      display.drawExampleBitmap(gImage_IMG_0001, x, y, 64, 180, GxEPD_BLACK);
-      //      display.update();
+//      display.setRotation(0);
+//      display.fillScreen(GxEPD_WHITE);
+//      display.drawExampleBitmap(gImage_IMG_0001, x, y, 64, 180, GxEPD_BLACK);
+//      display.update();
     }
     //do not refresh until changes. Time for full refresh is 2s
     bRefreshScreen = false;
@@ -182,14 +183,14 @@ void loopStatus() {
       uint8_t rotation = display.getRotation();
       for (uint16_t r = 0; r < 4; r++)
       {
-        //        display.setRotation(r);
-        //        display.fillScreen(GxEPD_WHITE);
-        //        display.fillRect(0, 0, 8, 8, GxEPD_BLACK);
-        //        display.fillRect(display.width() - 18, 0, 16, 16, GxEPD_BLACK);
-        //       display.fillRect(display.width() - 25, display.height() - 25, 24, 24, GxEPD_BLACK);
-        //        display.fillRect(0, display.height() - 33, 32, 32, GxEPD_BLACK);
-        //        display.update();
-        //        display.setRotation(rotation);
+//        display.setRotation(r);
+//        display.fillScreen(GxEPD_WHITE);
+//        display.fillRect(0, 0, 8, 8, GxEPD_BLACK);
+//        display.fillRect(display.width() - 18, 0, 16, 16, GxEPD_BLACK);
+//       display.fillRect(display.width() - 25, display.height() - 25, 24, 24, GxEPD_BLACK);
+//        display.fillRect(0, display.height() - 33, 32, 32, GxEPD_BLACK);
+//        display.update();
+//        display.setRotation(rotation);
       }
     }
     //do not refresh until changes. Time for full refresh is 2s

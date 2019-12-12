@@ -4,6 +4,7 @@ let pos_CircleBX, pos_CircleBY;
 let radioA, radioB;
 let maxColorValue = 255;
 let bMousePressed = false;
+let bSendClick = false;
 
 
 let socket;
@@ -32,11 +33,15 @@ let statusMachine = 0; // 0 is waiting , 1 is ready to play , 2 is playing, 3 fi
 let counterTimer_Start = 3000;
 let minTime_toSendData = 33;
 let lastMillis_toSendData = 0;
+let maxTime_toSendClick = 300;
+let millis_toSendClick = 0;
 let counterTime;
 let timerLeftMachineStatus = 3;
-let idJoystick = -1;
+let idJoystick = 0;
 let idCounterServer = -1;
 let textToScreen = "";
+let bPlayer1Ready = false;
+let bPlayer2Ready = false;
 
 //==============================================
 function windowResized() {
@@ -92,14 +97,28 @@ function setup() {
 		//line(data.x, data.y, data.px, data.py)
 		console.log("Id Counter = " + data.id);
 		idCounterServer = data.id;
-		if(idCounterServer > 0 && idCounterServer <1){
-			idJoystick = idCounterServer; //1?
-		}
-		else if(idCounterServer > 0 && idCounterServer <3){
-			idJoystick = idCounterServer; //1?
-		}
-		else{
-			idJoystick = 0; //1?
+		let bPlayer1Ready = data.bPlayer1;
+		let bPlayer2Ready = data.bPlayer2;
+		if(idCounterServer > 0){
+			if(!bPlayer1Ready){
+				idJoystick = 1;
+
+    			let data = {
+    				idPlayer: 1
+  				};
+    			socket.emit('addJoystick_1',data);
+			}
+			else if(!bPlayer2Ready){
+				idJoystick = 2;
+				
+    			let data = {
+    				idPlayer: 2
+  				};
+    			socket.emit('addJoystick_2',data);
+			}
+			else{
+				idJoystick = 0; //1?
+			}
 		}
 		
 		console.log("Text = " + data.message);
@@ -117,16 +136,25 @@ function draw() {
 
 	if(statusMachine == 0){
 		drawHello();
-		if (mouseIsPressed && idCounterServer < 3) { //Fast way to say only iD1 and Id2 can play
+		//console.log("hello , idJoystick = ",idJoystick);
+
+		if (mouseIsPressed && (idJoystick >0 && idJoystick<3)) { //Fast way to say only iD1 and Id2 can play
     		stroke(strokeGrey_Color);
     		fill(fillButton_Color);
     		ellipse(mouseX, mouseY, 500, 500);
     		statusMachine++;
+  		}else{
+  			counterTime = int((millis() - counterTimer_Start)/1000);
+			if(counterTime > timerLeftMachineStatus){
+				location.reload();
+				counterTimer_Start = millis();
+			}
   		}
 
 	}
 	else if(statusMachine == 1){
 		draw321();
+		//TODO ver como hacer para ganarse un mejor puesto. 
 		counterTime = int((millis() - counterTimer_Start)/1000);
 		if(counterTime > timerLeftMachineStatus){
 			statusMachine ++;
@@ -175,15 +203,20 @@ function drawHello() {
 	fill(40, 10, 10);
 	rect(0,0, window.screen.width, window.screen.height);
 	//text("Hello World", 200, 200);
-	textSize(40);
+	textSize(50);
 	textAlign(CENTER, CENTER);
 	stroke(255);
 	fill(255);
 
-	if(idJoystick > 0)text("Player "+str(idJoystick), window.screen.width*0.5, window.screen.height*0.5 - 30);
-	if(idCounterServer > 0)text("waiting list number..."+str(idCounterServer), window.screen.width*0.5, window.screen.height*0.5 + 30);
+	if(idJoystick > 0)text("Player "+str(idJoystick), window.screen.width*0.5, window.screen.height*0.5 - 50);
+	else{
+		text("-- MADPONG by CodeAttack --", window.screen.width*0.5, window.screen.height*0.5 - 50);
+	}
+	
+	textSize(40);
+	if(idCounterServer > 0)text("Conectadas #"+str(idCounterServer), window.screen.width*0.5, window.screen.height*0.5 + 50);
 
-	text(textToScreen, window.screen.width*0.5, window.screen.height*0.5 + 90);
+	text(textToScreen, window.screen.width*0.5, window.screen.height*0.5 + 150);
 
 	pop();
 }
@@ -193,7 +226,13 @@ function draw321() {
 	push();
 	fill(40, 10, 10);
 	rect(0,0, window.screen.width, window.screen.height);
-	//text("Hello World", 200, 200);
+	
+	textSize(100);
+	textAlign(CENTER, CENTER);
+	stroke(255);
+	fill(255);
+	if(idJoystick > 0)text("Player "+str(idJoystick), window.screen.width*0.5, window.screen.height*0.15);
+
 	textSize(40);
 	textAlign(CENTER, CENTER);
 	stroke(255);
@@ -201,12 +240,12 @@ function draw321() {
 
 	let restartTime = timerLeftMachineStatus - counterTime;
 	if(restartTime < 0 )restartTime = 0;
-	text("We start in .."+nf(str(restartTime, 0, 0)) , window.screen.width*0.5, window.screen.height*0.5);
+	text("Empezamos en ... "+nf(str(restartTime, 0, 0)) , window.screen.width*0.5, window.screen.height*0.5);
 
 	pop();
 }
 
-
+//Not used yet...
 //==============================================
 function drawFinish() {
 	push();
@@ -234,11 +273,18 @@ function setFinishStatus(){
 //==============================================
 function mousePressed(){
 	bMousePressed = true;
+	
+	millis_toSendClick = millis();
 }
 
 //==============================================
 function mouseReleased(){
 	bMousePressed = false;
+	resetJoystick();
+	if(millis() - millis_toSendClick < maxTime_toSendClick && !bSendClick){
+		bSendClick = true;
+		console.log("Send click is active")
+	}
 }
 
 function touchStarted() {
@@ -298,10 +344,27 @@ function sendClickJoystick(_a, _b) {
   socket.emit('clickJoystick',data);
 }
 
+//=============================================
+function resetJoystick(){
+	//Reset Joystick
+	joystick2d_posx = pos_CircleX;
+	joystick2d_posy = pos_CircleY;
+	distX = 0;
+	distY = 0;
+}
+
 //==============================================
 function drawJoystick_XY() {
 	
 	/////////////
+	push();
+		textSize(100);
+		textAlign(CENTER, CENTER);
+		stroke(255);
+		fill(255);
+		if(idJoystick > 0)text("Player "+str(idJoystick), window.screen.width*0.5, window.screen.height*0.15);
+	pop();
+
 	push();
 	
 	pos_CircleX = window.screen.width*0.5;//0.25;
@@ -322,55 +385,65 @@ function drawJoystick_XY() {
 		if(distMouse < radioXY*0.5){
 			fill(c_Over);
 			ellipse(pos_CircleX, pos_CircleY, radioXY-delta_radio, radioXY-delta_radio);
-			sendClickJoystick(1, 0);
 		}
 		else {
 			fill(c_NotOver);
 			ellipse(pos_CircleX, pos_CircleY, radioXY-delta_radio, radioXY-delta_radio);
 		}
-		
-	}
 
-	angleMode(DEGREES);
-	let a = atan2(mouseY - pos_CircleY, mouseX - pos_CircleX);
+		/*
+		// Larger rectangle is rotating in degrees
+		angleMode(DEGREES);
+		let a = atan2(mouseY - pos_CircleY, mouseX - pos_CircleX);
+		pushMatrix();
+		translate(pos_CircleX, pos_CircleY);
+		rotate(a);
+	  	rect(-20*8, -5*1, 40*8, 10*1); 
+	  	popMatrix();
+	  	*/
 
-	/*
-	pushMatrix();
-	translate(pos_CircleX, pos_CircleY);
-	rotate(a);
-  	rect(-20*8, -5*1, 40*8, 10*1); // Larger rectangle is rotating in degrees
-  	popMatrix();
-  	*/
+		if(distMouse < radioXY*0.5*0.8){
+			joystick2d_posx = mouseX;
+			joystick2d_posy = mouseY;
+			distX = map(dist(mouseX, 0, pos_CircleX, 0), 0, radioXY*0.5*0.8, 0, 1);
+			distY = map(dist(0, mouseY, 0, pos_CircleY), 0, radioXY*0.5*0.8, 0, 1);
+			//TODO map 0 range area
+			if(distX < 0.15){
+				distX = 0;
+				joystick2d_posx = pos_CircleX;
+			}
+			if(distY < 0.15){
+				distY = 0;
+				joystick2d_posy = pos_CircleY;
+			}
 
-	if(distMouse < radioXY*0.5*0.8){
-		joystick2d_posx = mouseX;
-		joystick2d_posy = mouseY;
-		distX = map(dist(mouseX, 0, pos_CircleX, 0), 0, 150, 0, 1);
-		distY = map(dist(0, mouseY, 0, pos_CircleY), 0, 150, 0, 1);
-		//TODO map 0 range area
-		if(distX < 0.1){
-			distX = 0;
-			joystick2d_posx = pos_CircleX;
-		}
-		if(distY < 0.1){
-			distY = 0;
-			joystick2d_posy = pos_CircleY;
+			if(distX > 0.9){
+				distX = 1;
+			}
+			if(distY < 0.9){
+				distY = 1;
+			}
+
+			///////////////////////////////////////
+			//Set Signed Direction 
+			if(mouseX < pos_CircleX){
+				distX = distX * -1;
+			}
+			if(mouseY < pos_CircleY){
+				distY = distY * -1;
+			}
+			
 		}
 
-		///////////////////////////////////////
-		//Signed Direction 
-		if(mouseX < pos_CircleX){
-			distX = distX * -1;
+	}else {
+		if(distMouse < radioXY*0.5){
+			resetJoystick();
 		}
-		if(mouseY < pos_CircleY){
-			distY = distY * -1;
+
+		if(bSendClick){
+			sendClickJoystick(1, 0);
+			bSendClick = false;
 		}
-		
-	}else{
-		joystick2d_posx = pos_CircleX;
-		joystick2d_posy = pos_CircleY;
-		distX = 0;
-		distY = 0;
 	}
 
 	//socketio emit // TODO : emit each 33 millis or less, but not every frame

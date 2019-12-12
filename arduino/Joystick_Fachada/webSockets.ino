@@ -102,7 +102,7 @@ void setup_webSockets() {
 
 
   // server address, port and URL
-  socketIO.begin("192.168.1.171", 8004);//TODO 127.0.0.1? or URL //192.168.43.244
+  socketIO.begin("192.168.1.109", 8004);//TODO 127.0.0.1? or URL //192.168.43.244
 
   // event handler
   socketIO.onEvent(socketIOEvent);
@@ -213,15 +213,11 @@ void loop_webSockets() {
           bSendNoLeftNoRightMessage = false;
         }
         else {
-          if (bSendLeftMessage) {
-            sendMessage("toServer", "X/" + String(mapAnalogX_ky023_left), String(idJoystick)); //String(mapAnalogX_ky023_left)
-            USE_SERIAL.println("bSendLeftMessage!");
-            bSendLeftMessage = false;
-          }
-          if (bSendRightMessage) {
-            sendMessage("toServer", "X/" + String(mapAnalogX_ky023_right), String(idJoystick)); // String(mapAnalogX_ky023_right)
-            USE_SERIAL.println("bSendRightMessage!");
-            bSendRightMessage = false;
+          if (bSendXMessage) {
+            sendMessage("toServer", "X/" + String(mapAnalogX_ky023), String(idJoystick));
+            //sendUdp( String(idJoystick) + "/X/" +  String(mapAnalogX_ky023));
+            if (bDebugPrint)USE_SERIAL.println("bSendXMessage!");
+            bSendXMessage = false;
           }
         }
 
@@ -242,20 +238,17 @@ void loop_webSockets() {
 
 }
 
+
 //-----------------------------------------------
 void sendNoLeftNoRightWebSockets() {
   bSendNoLeftNoRightMessage = true;
   sendUDPOnce = true;
 }
 
+
 //-----------------------------------------------
-void sendRightWebSockets() {
-  bSendRightMessage = true;
-  sendUDPOnce = true;
-}
-//-----------------------------------------------
-void sendLeftWebSockets() {
-  bSendLeftMessage = true;
+void sendXWebSockets() {
+  bSendXMessage = true;
   sendUDPOnce = true;
 }
 //-------------------------------------------------
@@ -266,7 +259,7 @@ void sendClickWebSockets() {
 
 //-------------------------------------------------
 void update_serialInput() {
-
+  /*
   String myTextLeft = "left\n";
   String myTextRight = "right\n";
   String myTextClick = "click\n";
@@ -274,12 +267,13 @@ void update_serialInput() {
   String mySerialReceivedString = "";
   if (USE_SERIAL.available() > 0) //Checks is there any data in buffer
   {
+    
     //USE_SERIAL.print("We got:");
     //USE_SERIAL.println(char(USE_SERIAL.read()));  //Read serial data byte and send back to serial monitor
     mySerialReceivedString = Serial.readString();
     USE_SERIAL.print(mySerialReceivedString);
 
-    if (mySerialReceivedString == myTextLeft) {
+    if (mySerialReceivedString == myTextLeft) { // this Left Right is not anymore
       USE_SERIAL.println("We send LEFT command");
       bSendLeftMessage = true;
     }
@@ -302,4 +296,5 @@ void update_serialInput() {
     //    USE_SERIAL.println("Hello World..."); //Print Hello word every one second
     //    delay(1000);                      // Wait for a second
   }
+  */
 }

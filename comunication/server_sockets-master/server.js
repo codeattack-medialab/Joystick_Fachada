@@ -26,6 +26,10 @@ var fs = require('fs');
 //Control Vars
 let connectCounter = 0;
 let statusMachine = 0; //0 waiting, 1 ready to play, 2 playing, 3 finish
+let bPlayer1Ready = false;
+let player1Id = "...p1";
+let bPlayer2Ready = false;
+let player2Id = "...p2";
 
 //First Server
 var server = http.createServer(handleRequest);
@@ -44,20 +48,39 @@ io.sockets.on('connection', function (socket) {
 
   console.log("We have a new client: " + socket.id);
   console.log("connectCounter ="+connectCounter);
+  console.log("Player 1 ready?: " + bPlayer1Ready);
+  console.log("Player 2 ready?: " + bPlayer2Ready);
 
   //prepare data to send to my recent connected client
+  let text2SendFuturePlayer = "";
+  if(connectCounter < 3)text2SendFuturePlayer = "Joystick Asignado. Toca la pantalla!";
+  else text2SendFuturePlayer = "Espera tu turno. Muchas gracias!"
   var dataConnection = {
     id: connectCounter,
-    message: 'Wait until your tourn'
+    bPlayer1: bPlayer1Ready,
+    bPlayer2: bPlayer2Ready,
+    message: text2SendFuturePlayer
   };
 
   socket.emit('idConnectCounter', dataConnection);
 
 
   socket.on('disconnect', function() {
-    console.log("Client has disconnected");
+    console.log("Client #"+socket.id+" has disconnected");
     connectCounter--;
     console.log("connectCounter ="+connectCounter);
+    //Check if this user was player 1 or 2
+    if(player1Id == socket.id){
+      console.log("Removing Player1. #"+socket.id+" has disconnected");
+      bPlayer1Ready = false;
+      player1Id = "...p1";
+    }
+    if(player2Id == socket.id){
+      console.log("Removing Player2. #"+socket.id+" has disconnected");
+      bPlayer2Ready = false;
+      player2Id = "...p2";
+    }
+
   });
 
   socket.on('statusMachine', function(data) {
@@ -67,6 +90,16 @@ io.sockets.on('connection', function (socket) {
       //socket.broadcast.emit('mouse', data);
   });
 
+  socket.on("addJoystick_1", function(data) {
+    bPlayer1Ready = true;
+    player1Id = socket.id;
+    console.log("Received: 'addJoystick_1' " + bPlayer1Ready + " from " + player1Id);
+  });
+  socket.on("addJoystick_2", function(data) {
+    bPlayer2Ready = true;
+    player2Id = socket.id;
+    console.log("Received: 'addJoystick_2' " + bPlayer2Ready + " from " + player2Id);
+  });
 
   ///////////////////////////////////////////////////////////
   //The old CodeAttack id1 or id2 Joystick methods

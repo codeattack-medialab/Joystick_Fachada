@@ -1,3 +1,7 @@
+//////////////////////
+//Control Vars
+let connectCounter = 0;
+
 ////////////////////////////////////////////////
 
 var dgram = require('dgram');
@@ -45,7 +49,13 @@ io.sockets.on("connection", function(socket) {
   socket.on("addJoystick", function(channel) {
     socket.channel = channel;
     socket.join(channel);
+
+    connectCounter++;
+    console.log("We have a new client: " + socket.id);
+    console.log("connectCounter ="+connectCounter);
     console.log(socket.id + " joined " + channel);
+
+ 
     /*
     If we want to emit a message when someone is connected to the channel
     socket.broadcast
@@ -87,9 +97,13 @@ io.sockets.on("connection", function(socket) {
     });
 
   socket.on("disconnect", function() {
+    console.log('that was trying to disconnect. TODO Check this!'+ socket.id);
+
     socket.leave(socket.channel);//WEBSOCKETS TCP
-    console.log('that was trying to disconnect. TODO Check this!');
+
     //client.close();//UPD
+    connectCounter--;
+    console.log("connectCounter ="+connectCounter);
   });
 
 });

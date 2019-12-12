@@ -2,7 +2,7 @@
 ////////////////////////////////////////////////
 var dgram = require('dgram');
 var PORTUDP = 33333;
-var HOSTUDP = '127.0.0.1';//192.168.43.244//'192.168.43.14';//
+var HOSTUDP = '127.0.0.1';//'127.0.0.1';//192.168.43.244//'192.168.43.14';//
 //var messageClickPressed = new Buffer('Click/1');
 //var messageClickReleased = new Buffer('Click/0');
 var client;
@@ -39,7 +39,8 @@ server.listen(8004, function(){
 });
 
 //Then after server call Sockets
-let io = require('socket.io').listen(server);
+let io = require('socket.io')({"heartbeat interval":1,"close timeout":2}).listen(server);
+
 // Register a callback function to run when we have an individual connection
 // This is run for each individual user that connects
 io.sockets.on('connection', function (socket) {
@@ -64,7 +65,6 @@ io.sockets.on('connection', function (socket) {
 
   socket.emit('idConnectCounter', dataConnection);
 
-
   socket.on('disconnect', function() {
     console.log("Client #"+socket.id+" has disconnected");
     connectCounter--;
@@ -80,6 +80,7 @@ io.sockets.on('connection', function (socket) {
       bPlayer2Ready = false;
       player2Id = "...p2";
     }
+
 
   });
 
@@ -103,23 +104,10 @@ io.sockets.on('connection', function (socket) {
 
   ///////////////////////////////////////////////////////////
   //The old CodeAttack id1 or id2 Joystick methods
-  socket.on("addJoystick", function(channel) {
-    socket.channel = channel;
-    socket.join(channel);
-    console.log(socket.id + " joined " + channel);
-    /*
-    If we want to emit a message when someone is connected to the channel
-    socket.broadcast
-      .to(channel)
-      .emit("handshake", { message: socket.id + " connected to " + channel });
-    */
-
-  });
-
   socket.on("toServer", function(data) {
 
     //TODO Comment this if that can slow down the connectivty. Check latency
-    console.log(socket.id + " Emit to " + socket.channel);
+    //console.log(socket.id + " Emit to " + socket.channel);
     console.log(data);
     console.log(data.sender);
     console.log(data.message);

@@ -8,10 +8,10 @@
 #include <Hash.h>
 //////////////////////////////////////////////
 //ID Joystick
-int idJoystick = 2;
+int idJoystick = 1;
 //Enter the SSID and Password of the Access Point or Hotspot.
-const char* ssid = "Orange-BC0A";//"Medialab-Prado";//"Orange-BC0A"; //MPF
-const char* password = "NmyRdSqc";//"visualizar";//"NmyRdSqc"; //Fachad4MP
+const char* ssid = "MPF";//"Medialab-Prado";//"Orange-BC0A"; //MPF
+const char* password = "Fachad4MP";//"visualizar";//"NmyRdSqc"; //Fachad4MP
 //Enter the static ip that you want to set
 IPAddress ip(192, 168, 1, 111);
 IPAddress gateway(192, 168, 0, 1);

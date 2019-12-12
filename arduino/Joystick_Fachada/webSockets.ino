@@ -102,7 +102,7 @@ void setup_webSockets() {
 
 
   // server address, port and URL
-  socketIO.begin("192.168.1.109", 8004);//TODO 127.0.0.1? or URL //192.168.43.244
+  socketIO.begin("192.168.1.171", 8004);//TODO 127.0.0.1? //192.168.1.171 or URL //192.168.43.244 //192.168.200.102
 
   // event handler
   socketIO.onEvent(socketIOEvent);

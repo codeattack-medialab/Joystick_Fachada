@@ -84,7 +84,7 @@ function setup() {
 	//hammer.on("pinch", scaleRect);
 	//<hammer.on("rotate", rotateRect);
 
-	socket = io.connect('http://localhost:8004');
+	socket = io.connect('http://192.168.1.171:8004'); //192.168.200.102
 	//socket = io.connect();
 
 	//Kind of old p5js verision. Does not loadModel, not push()... , not mousePressed inside draw... 
@@ -269,17 +269,14 @@ function setFinishStatus(){
 	sendMachineStatus(statusMachine, idJoystick);
 }
 
-//KEY AND MOUSE EVENTS
 //==============================================
-function mousePressed(){
+//KEY AND MOUSE EVENTS
+function interactionPressed(){
 	bMousePressed = true;
-	
 	millis_toSendClick = millis();
 }
-
-//==============================================
-function mouseReleased(){
-	bMousePressed = false;
+function interactionReleased(){
+		bMousePressed = false;
 	resetJoystick();
 	if(millis() - millis_toSendClick < maxTime_toSendClick && !bSendClick){
 		bSendClick = true;
@@ -287,16 +284,23 @@ function mouseReleased(){
 	}
 }
 
-function touchStarted() {
- /*if (value === 0) {
-    bMousePressed = true;
-    console.log("touchStarted = " + bMousePressed);
-  } else {
-    bMousePressed = false;
-    console.log("touchStarted = " + bMousePressed);
-  }
-  */
+//Desktop Browser
+function mousePressed(){
+	interactionPressed();
 }
+
+function mouseReleased(){
+	interactionReleased();
+}
+
+//Mobile browser
+function touchStarted() {
+	interactionPressed();
+}
+
+function touchEnded() { 
+	interactionReleased();
+} 
 
 //==============================================
 function keyReleased(){

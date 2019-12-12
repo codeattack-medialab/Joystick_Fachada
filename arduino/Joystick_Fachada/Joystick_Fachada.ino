@@ -8,7 +8,7 @@
 #include <Hash.h>
 //////////////////////////////////////////////
 //ID Joystick
-int idJoystick = 1;
+int idJoystick = 2;
 //Enter the SSID and Password of the Access Point or Hotspot.
 const char* ssid = "MPF";//"Medialab-Prado";//MPF
 const char* password = "Fachad4MP";//"visualizar";//Fachad4MP
@@ -19,7 +19,7 @@ IPAddress subnet(255, 255, 255, 0);
 bool bDebugPrint = false;
 
 /////////////////////////////////////////////
-SocketIOclient socketIO;
+//SocketIOclient socketIO;
 
 //Control Vars
 bool bSendNoLeftNoRightMessage = false;
@@ -140,7 +140,7 @@ void loopStatus() {
     if (bRefreshScreen) {
       Serial.println("Display Waiting");
       //Waiting. Refresh Quick bitmap image
-      if (false) {
+      if (true) {
         display.setRotation(1);
         display.fillScreen(GxEPD_WHITE);
         display.drawExampleBitmap(myBitmap_madpong, x, y, 296, 128, GxEPD_BLACK, reverse);
